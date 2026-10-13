@@ -1,0 +1,317 @@
+:root {
+  --ink: #2d3436;
+  --muted: #6b7280;
+  --accent: #0984e3;
+  --card: rgba(255, 255, 255, 0.94);
+  --page: #f8f4f0;
+  --line: #e2e0dd;
+  --disabled: #cbd5e1;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.16);
+  --radius: 10px;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --ink: #e7e9ec;
+  --muted: #98a2ae;
+  --accent: #4aa3f0;
+  --card: rgba(24, 27, 32, 0.94);
+  --page: #14161b;
+  --line: #343941;
+  --disabled: #3d434c;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--page);
+  overscroll-behavior: none;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+.panel {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  padding: 12px 14px;
+  max-width: min(300px, calc(100vw - 90px));
+}
+
+.icon-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  color: var(--ink);
+  border-color: var(--muted);
+}
+
+.icon-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-sun,
+:root[data-theme='dark'] .icon-moon {
+  display: none;
+}
+
+:root[data-theme='dark'] .icon-sun {
+  display: block;
+}
+
+.panel-right {
+  left: auto;
+  right: 12px;
+  top: auto;
+  bottom: 96px;
+  max-width: min(280px, calc(100vw - 90px));
+}
+
+h1 {
+  margin: 0;
+  padding-right: 30px;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+.sub {
+  margin: 2px 0 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.stats dt {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+}
+
+.stats dd {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note {
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+#legend p {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+#legend code {
+  font-size: 11px;
+}
+
+.link {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.hud {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  width: min(520px, calc(100vw - 24px));
+}
+
+.coords {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.coords.has-pin {
+  cursor: copy;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.btn:disabled {
+  background: var(--disabled);
+  cursor: not-allowed;
+}
+
+#toast {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #fff;
+  background: rgba(214, 48, 49, 0.95);
+}
+
+#fatal {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  padding: 32px;
+  text-align: center;
+  background: var(--page);
+}
+
+#fatal[hidden] {
+  display: none;
+}
+
+/* ------------------------------------------------- MapLibre control theming
+   maplibre-gl.css hard-codes #fff chrome for its controls; restyle it to match
+   the dark theme. Icons are monochrome SVG background-images, so a filter is
+   enough to flip them to light. */
+
+:root[data-theme='dark'] .maplibregl-ctrl-group {
+  background: #23272e;
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-group:not(:empty) {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-group button + button {
+  border-top-color: #3a4048;
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl button .maplibregl-ctrl-icon {
+  filter: invert(1) brightness(1.7);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl button:not(:disabled):hover,
+:root[data-theme='dark'] .maplibregl-ctrl button:not(:disabled):active {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-attrib.maplibregl-compact {
+  background-color: rgba(24, 27, 32, 0.9);
+  color: var(--ink);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-attrib a {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-attrib-button {
+  filter: invert(1);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-button {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme='dark'] .maplibregl-ctrl-scale {
+  background-color: rgba(24, 27, 32, 0.8);
+  border-color: var(--muted);
+  color: var(--ink);
+}
+
+/* Pin, matching the marker used inside the mobile app (App.js). */
+.nomad-pin {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: #d63031;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.maplibregl-canvas:focus {
+  outline: none;
+}

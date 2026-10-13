@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="theme-color" id="theme-color" content="#f8f4f0" />
+    <title>Nomad · Kampala Offline Map</title>
+    <link rel="stylesheet" href="./vendor/maplibre-gl.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <script>
+      // Paint the chrome in the right theme before the first frame. app.js owns
+      // the full theme logic; this is just the pre-paint hint to avoid a flash.
+      try {
+        const saved = localStorage.getItem('nomad.theme');
+        document.documentElement.dataset.theme =
+          saved === 'dark' || saved === 'light'
+            ? saved
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+      } catch {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <section class="card panel" id="panel">
+      <button
+        id="theme-toggle"
+        class="icon-btn"
+        type="button"
+        title="Switch to dark map"
+        aria-label="Switch colour theme"
+        aria-pressed="false"
+      >
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" />
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2" />
+          <path
+            d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
+          />
+        </svg>
+      </button>
+      <h1>Nomad</h1>
+      <p class="sub">Kampala · offline vector map</p>
+      <dl class="stats">
+        <div><dt>Zoom</dt><dd id="stat-zoom">–</dd></div>
+        <div><dt>Local tiles</dt><dd id="stat-tiles">0</dd></div>
+        <div><dt>Source</dt><dd id="stat-source">city.mbtiles</dd></div>
+      </dl>
+      <p class="note" id="stat-meta">Booting local tile server…</p>
+    </section>
+
+    <section class="card panel panel-right" id="legend">
+      <button id="about-toggle" class="link" aria-expanded="false">About this map</button>
+      <div id="about" hidden>
+        <p>
+          Vector tiles are read directly from the <code>city.mbtiles</code> SQLite bundle that ships
+          inside the Nomad app. Nothing on this page touches the internet.
+        </p>
+        <p id="about-attribution"></p>
+      </div>
+    </section>
+
+    <footer class="card hud">
+      <div class="coords" id="coords" title="Click to copy">Tap the map to drop a pin</div>
+      <div class="actions">
+        <button id="recenter" class="btn">Recenter</button>
+        <button id="clear" class="btn" disabled>Clear pin</button>
+      </div>
+    </footer>
+
+    <div id="toast" class="card" hidden></div>
+    <div id="fatal" hidden>
+      <h2>WebGL unavailable</h2>
+      <p id="fatal-message"></p>
+      <p>MapLibre needs WebGL2. Try a recent Chrome, Edge or Firefox with hardware acceleration on.</p>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
