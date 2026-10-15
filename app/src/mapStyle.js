@@ -32,7 +32,7 @@ const recolor = (value) => {
   return value;
 };
 
-export function buildKampalaStyle(mbtilesUrl, { dark = false } = {}) {
+export function buildKampalaStyle(tileUrl, { dark = false } = {}) {
   const roadFilter = [
     'in',
     'class',
@@ -53,7 +53,7 @@ export function buildKampalaStyle(mbtilesUrl, { dark = false } = {}) {
     sources: {
       openmaptiles: {
         type: 'vector',
-        url: mbtilesUrl,
+        url: tileUrl,
       },
     },
     layers: [

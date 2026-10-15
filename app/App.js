@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useAssets } from 'expo-asset';
-import { Camera, Map, Marker } from '@maplibre/maplibre-react-native';
+import NomadMap from './src/NomadMap';
+import { useOfflineTiles } from './src/useOfflineTiles';
 import { buildKampalaStyle } from './src/mapStyle';
 
 const KAMPALA = [32.5825, 0.3476];
@@ -11,8 +11,13 @@ const KAMPALA = [32.5825, 0.3476];
 const ACCENT = '#191970';
 
 export default function App() {
-  const [assets, error] = useAssets([require('./assets/city.mbtiles')]);
+  // Everything platform-specific lives behind these two imports: the map engine
+  // and where the offline tiles come from. This file runs unchanged on device
+  // and in the browser.
+  const { ready, error, tileUrl } = useOfflineTiles();
   const [pin, setPin] = useState(null);
+
+  const mapStyle = useMemo(() => buildKampalaStyle(tileUrl, { dark: true }), [tileUrl]);
 
   if (error) {
     return (
@@ -23,7 +28,7 @@ export default function App() {
     );
   }
 
-  if (!assets?.[0]?.localUri) {
+  if (!ready) {
     return (
       <View style={styles.center}>
         <Text style={styles.hint}>Loading offline map…</Text>
@@ -32,26 +37,17 @@ export default function App() {
     );
   }
 
-  const mapStyle = buildKampalaStyle(
-    assets[0].localUri.replace('file://', 'mbtiles://'),
-    { dark: true },
-  );
-
-  const onPress = (event) => {
-    const { lngLat } = event.nativeEvent;
-    setPin(lngLat);
-  };
-
   return (
     <View style={styles.container}>
-      <Map style={styles.map} mapStyle={mapStyle} onPress={onPress}>
-        <Camera initialViewState={{ center: KAMPALA, zoom: 12 }} />
-        {pin ? (
-          <Marker lngLat={pin}>
-            <View style={styles.pin} />
-          </Marker>
-        ) : null}
-      </Map>
+      <NomadMap
+        style={styles.map}
+        mapStyle={mapStyle}
+        center={KAMPALA}
+        zoom={12}
+        pin={pin}
+        pinContent={<View style={styles.pin} />}
+        onPress={setPin}
+      />
 
       <View style={styles.hud}>
         <Text style={styles.coord}>

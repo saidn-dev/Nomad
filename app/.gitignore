@@ -42,4 +42,5 @@ yarn-error.*
 
 # offline map data (regenerate with Planetiler; see PLAN.md)
 *.mbtiles
+*.pmtiles
 *.osm.pbf
