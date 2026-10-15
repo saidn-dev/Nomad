@@ -15,7 +15,7 @@ export default function App() {
     return (
       <View style={styles.center}>
         <Text style={styles.hint}>Failed to load offline map: {error.message}</Text>
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
       </View>
     );
   }
@@ -24,13 +24,14 @@ export default function App() {
     return (
       <View style={styles.center}>
         <Text style={styles.hint}>Loading offline map…</Text>
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
       </View>
     );
   }
 
   const mapStyle = buildKampalaStyle(
     assets[0].localUri.replace('file://', 'mbtiles://'),
+    { dark: true },
   );
 
   const onPress = (event) => {
@@ -65,7 +66,7 @@ export default function App() {
         </View>
       </View>
 
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </View>
   );
 }
@@ -73,16 +74,17 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#191c21',
   },
   center: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#191c21',
   },
   hint: {
     fontSize: 16,
-    color: '#333',
+    color: '#e6e9ee',
   },
   map: {
     flex: 1,
@@ -101,11 +103,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     padding: 16,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: 'rgba(20,22,27,0.95)',
   },
   coord: {
     fontSize: 14,
-    color: '#333',
+    color: '#e6e9ee',
     marginBottom: 8,
     textAlign: 'center',
   },
