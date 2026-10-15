@@ -7,6 +7,9 @@ import { buildKampalaStyle } from './src/mapStyle';
 
 const KAMPALA = [32.5825, 0.3476];
 
+// Brand accent colour — midnight blue.
+const ACCENT = '#191970';
+
 export default function App() {
   const [assets, error] = useAssets([require('./assets/city.mbtiles')]);
   const [pin, setPin] = useState(null);
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnRequest: {
-    backgroundColor: '#0984e3',
+    backgroundColor: ACCENT,
   },
   btnAccept: {
     backgroundColor: '#00b894',
