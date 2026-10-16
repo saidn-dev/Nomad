@@ -22,7 +22,14 @@
     "ios": "expo run:ios",
     "preweb": "node scripts/sync-maplibre-worker.mjs",
     "web": "expo start --web",
-    "postinstall": "node scripts/sync-maplibre-worker.mjs"
+    "prebuild:web": "node scripts/sync-maplibre-worker.mjs",
+    "build:web": "expo export --platform web",
+    "postinstall": "node scripts/sync-maplibre-worker.mjs",
+    "lint": "expo lint"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.2"
+  }
 }

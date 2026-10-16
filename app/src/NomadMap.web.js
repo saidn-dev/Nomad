@@ -29,7 +29,9 @@ export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPr
   const pinRootRef = useRef(null);
   const markerRef = useRef(null);
   const onPressRef = useRef(onPress);
-  onPressRef.current = onPress;
+  useEffect(() => {
+    onPressRef.current = onPress;
+  }, [onPress]);
 
   // Create the map once. `center` / `zoom` / `mapStyle` seed the view, mirroring
   // the app's <Camera initialViewState> rather than tracking later changes.
@@ -92,7 +94,7 @@ export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPr
     markerRef.current = new Marker({ element: pinElRef.current, anchor: 'center' })
       .setLngLat(pin)
       .addTo(map);
-  }, [pin?.[0], pin?.[1]]);
+  }, [pin]);
 
   return <div ref={containerRef} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }} />;
 }
