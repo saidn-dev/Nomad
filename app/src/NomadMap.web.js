@@ -8,6 +8,7 @@ import { createRoot } from 'react-dom/client';
 import { Map as MapLibreMap, Marker, addProtocol, setWorkerUrl } from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { MAP_MAX_ZOOM, UGANDA_BOUNDS, coverZoom } from './uganda';
 
 // The pmtiles:// scheme reads the offline archive straight from the static site
 // with HTTP range requests — no tile server required.
@@ -53,7 +54,28 @@ export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPr
     // Escape hatch for the devtools console and design checks.
     if (typeof window !== 'undefined') window.__nomadMap = map;
 
+    // Keep the camera over Uganda. There are no tiles outside the country, so
+    // panning is bounded and the zoom-out limit is the point at which the
+    // viewport would start to show beyond the border. Because that limit
+    // depends on the viewport, it is recomputed whenever the window resizes.
+    const [west, south, east, north] = UGANDA_BOUNDS;
+    map.setMaxBounds([
+      [west, south],
+      [east, north],
+    ]);
+    map.setMaxZoom(MAP_MAX_ZOOM);
+    map.setRenderWorldCopies(false);
+
+    const applyZoomLimit = () => {
+      const el = containerRef.current;
+      if (el) map.setMinZoom(coverZoom(el.clientWidth, el.clientHeight));
+    };
+    applyZoomLimit();
+    const resizeObserver = new ResizeObserver(applyZoomLimit);
+    resizeObserver.observe(containerRef.current);
+
     return () => {
+      resizeObserver.disconnect();
       pinRootRef.current?.unmount();
       map.remove();
       mapRef.current = null;

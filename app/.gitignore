@@ -44,3 +44,6 @@ yarn-error.*
 *.mbtiles
 *.pmtiles
 *.osm.pbf
+
+# generated from assets/fonts by scripts/sync-fonts.mjs
+/public/fonts/

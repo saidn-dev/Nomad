@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import NomadMap from './src/NomadMap';
 import { useOfflineTiles } from './src/useOfflineTiles';
+import { useGlyphs } from './src/glyphs';
 import { buildKampalaStyle } from './src/mapStyle';
 
 const KAMPALA = [32.5825, 0.3476];
@@ -11,13 +12,19 @@ const KAMPALA = [32.5825, 0.3476];
 const ACCENT = '#191970';
 
 export default function App() {
-  // Everything platform-specific lives behind these two imports: the map engine
-  // and where the offline tiles come from. This file runs unchanged on device
-  // and in the browser.
-  const { ready, error, tileUrl } = useOfflineTiles();
+  // Everything platform-specific lives behind these three imports: the map
+  // engine, where the offline tiles come from, and where the offline label
+  // glyphs come from. This file runs unchanged on device and in the browser.
+  const tiles = useOfflineTiles();
+  const fonts = useGlyphs();
+  const ready = tiles.ready && fonts.ready;
+  const error = tiles.error ?? fonts.error;
   const [pin, setPin] = useState(null);
 
-  const mapStyle = useMemo(() => buildKampalaStyle(tileUrl, { dark: true }), [tileUrl]);
+  const mapStyle = useMemo(
+    () => buildKampalaStyle(tiles.tileUrl, { dark: true, glyphs: fonts.glyphs }),
+    [tiles.tileUrl, fonts.glyphs],
+  );
 
   if (error) {
     return (
