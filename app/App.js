@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
 import NomadMap from './src/NomadMap';
 import { useOfflineTiles } from './src/useOfflineTiles';
 import { useGlyphs } from './src/glyphs';
@@ -10,6 +11,18 @@ const KAMPALA = [32.5825, 0.3476];
 
 // Brand accent colour — midnight blue.
 const ACCENT = '#191970';
+
+// The opening frame is held for a fixed minimum, and also until the offline
+// tiles and label glyphs are really on disk — first launch copies ~50 MB out
+// of the APK, so releasing early would flash an empty map. Both live at module
+// scope rather than inside the component: run later and the splash may already
+// have dismissed itself, and the start time would drift by a render.
+const SPLASH_MIN_MS = 2000;
+const SPLASH_START = Date.now();
+
+if (Platform.OS !== 'web') {
+  SplashScreen.preventAutoHideAsync();
+}
 
 export default function App() {
   // Everything platform-specific lives behind these three imports: the map
@@ -25,6 +38,23 @@ export default function App() {
     () => buildKampalaStyle(tiles.tileUrl, { dark: true, glyphs: fonts.glyphs }),
     [tiles.tileUrl, fonts.glyphs],
   );
+
+  // Dismiss the splash only once React has committed a screen AND the opening
+  // frame has been up for its full 2 s. If loading overruns that, we just wait
+  // for it, so a slow first launch never reveals a blank map. Error paths
+  // dismiss too, so a failure surfaces instead of hanging on the logo forever.
+  useEffect(() => {
+    if (!(ready || error)) return undefined;
+
+    const remaining = SPLASH_MIN_MS - (Date.now() - SPLASH_START);
+    if (remaining <= 0) {
+      SplashScreen.hideAsync();
+      return undefined;
+    }
+
+    const timer = setTimeout(() => SplashScreen.hideAsync(), remaining);
+    return () => clearTimeout(timer);
+  }, [ready, error]);
 
   if (error) {
     return (
@@ -52,7 +82,6 @@ export default function App() {
         center={KAMPALA}
         zoom={12}
         pin={pin}
-        pinContent={<View style={styles.pin} />}
         onPress={setPin}
       />
 
@@ -94,14 +123,6 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-  },
-  pin: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#d63031',
-    borderWidth: 2,
-    borderColor: '#fff',
   },
   hud: {
     position: 'absolute',

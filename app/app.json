@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "app",
+    "name": "Nomad",
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,9 +12,8 @@
     "android": {
       "package": "com.nomad.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#000000",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       }
     },
@@ -23,7 +22,16 @@
     },
     "plugins": [
       "@maplibre/maplibre-react-native",
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain"
+        }
+      ]
     ]
   }
 }

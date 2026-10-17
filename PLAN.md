@@ -130,6 +130,7 @@ The ESP32-C3 bridge firmware is deliberately scoped to a single, stable C++ file
 
 ### Milestone 2: Radio Bridge Firmware
 * **Objective:** Code the ESP32-C3 transceivers to bridge Bluetooth LE UART directly to long-range raw ESP-NOW broadcast frames.
+* **Prerequisite — Hardware Validation:** Before any firmware work, run the bench-test plan in [MILESTONE-2.md](./MILESTONE-2.md) (minimum hardware purchase, two-way ESP-NOW test, BLE test, BLE + ESP-NOW coexistence test, end-to-end range test). The coexistence test is the key technical risk gate for this milestone.
 * **Platform:** VS Code + PlatformIO.
 * **Libraries:** `NimBLE-Arduino` (lightweight BLE stack), standard ESP-NOW Arduino headers.
 * **Hardware Architecture:** The ESP32-C3 uses a single-core RISC-V processor with a single shared 2.4GHz physical radio antenna. Coexistence is the primary failure vector.

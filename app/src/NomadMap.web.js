@@ -4,11 +4,11 @@
 // engine is MapLibre GL JS instead of maplibre-react-native, because the native
 // module has no web build. This is the *only* place the two platforms diverge.
 import { useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Map as MapLibreMap, Marker, addProtocol, setWorkerUrl } from 'maplibre-gl';
+import { Map as MapLibreMap, addProtocol, setWorkerUrl } from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MAP_MAX_ZOOM, UGANDA_BOUNDS, coverZoom } from './uganda';
+import { EMPTY_PIN, PIN_LAYER_ID, PIN_PAINT, PIN_SOURCE_ID, pinData } from './pin';
 
 // The pmtiles:// scheme reads the offline archive straight from the static site
 // with HTTP range requests — no tile server required.
@@ -23,12 +23,26 @@ if (typeof document !== 'undefined') {
   window.__nomadWorkerUrl = workerUrl;
 }
 
-export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPress }) {
+// The pin is a circle layer here for the same reason it is on device: it is
+// drawn by the render engine, not tracked as a DOM marker. `setStyle` throws
+// away everything added at runtime, so the source is re-created whenever it is
+// missing rather than assumed to still be there.
+function applyPinLayer(map, pin) {
+  if (!map.getSource(PIN_SOURCE_ID)) {
+    map.addSource(PIN_SOURCE_ID, { type: 'geojson', data: EMPTY_PIN });
+    map.addLayer({
+      id: PIN_LAYER_ID,
+      type: 'circle',
+      source: PIN_SOURCE_ID,
+      paint: PIN_PAINT,
+    });
+  }
+  map.getSource(PIN_SOURCE_ID).setData(pinData(pin));
+}
+
+export default function NomadMap({ mapStyle, center, zoom, pin, onPress }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
-  const pinElRef = useRef(null);
-  const pinRootRef = useRef(null);
-  const markerRef = useRef(null);
   const onPressRef = useRef(onPress);
   useEffect(() => {
     onPressRef.current = onPress;
@@ -46,10 +60,6 @@ export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPr
     });
     // MapLibre reports lngLat as an object; the app speaks [lng, lat].
     map.on('click', (event) => onPressRef.current?.([event.lngLat.lng, event.lngLat.lat]));
-
-    const pinEl = document.createElement('div');
-    pinElRef.current = pinEl;
-    pinRootRef.current = createRoot(pinEl);
     mapRef.current = map;
     // Escape hatch for the devtools console and design checks.
     if (typeof window !== 'undefined') window.__nomadMap = map;
@@ -76,12 +86,8 @@ export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPr
 
     return () => {
       resizeObserver.disconnect();
-      pinRootRef.current?.unmount();
       map.remove();
       mapRef.current = null;
-      markerRef.current = null;
-      pinElRef.current = null;
-      pinRootRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -94,29 +100,11 @@ export default function NomadMap({ mapStyle, center, zoom, pin, pinContent, onPr
     mapRef.current?.setStyle(mapStyle);
   }, [mapStyle]);
 
-  // Render the pin with the app's own React element, so a style tweak in
-  // App.js is reflected here too.
+  // Show / move / hide the pin. Depending on `mapStyle` as well as `pin` so the
+  // layer is rebuilt immediately after a setStyle drops it.
   useEffect(() => {
-    pinRootRef.current?.render(pinContent);
-  }, [pinContent]);
-
-  // Show / move / hide the pin.
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !pinElRef.current) return;
-    if (!pin) {
-      markerRef.current?.remove();
-      markerRef.current = null;
-      return;
-    }
-    if (markerRef.current) {
-      markerRef.current.setLngLat(pin);
-      return;
-    }
-    markerRef.current = new Marker({ element: pinElRef.current, anchor: 'center' })
-      .setLngLat(pin)
-      .addTo(map);
-  }, [pin]);
+    if (mapRef.current) applyPinLayer(mapRef.current, pin);
+  }, [pin, mapStyle]);
 
   return <div ref={containerRef} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }} />;
 }
