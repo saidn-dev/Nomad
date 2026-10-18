@@ -1,0 +1,7 @@
+.pio/build/esp32c3/lib4fc/NimBLE-Arduino/nimble/nimble/host/mesh/src/health_srv.c.o: \
+ .pio/libdeps/esp32c3/NimBLE-Arduino/src/nimble/nimble/host/mesh/src/health_srv.c \
+ .pio/libdeps/esp32c3/NimBLE-Arduino/src/nimble/porting/nimble/include/syscfg/syscfg.h \
+ .pio/libdeps/esp32c3/NimBLE-Arduino/src/nimble/esp_port/port/include/esp_nimble_cfg.h \
+ .pio/libdeps/esp32c3/NimBLE-Arduino/src/nimconfig.h \
+ C:/Users/saidn/.platformio/packages/framework-arduinoespressif32-libs/esp32c3/qio_qspi/include/sdkconfig.h \
+ .pio/libdeps/esp32c3/NimBLE-Arduino/src/nimconfig_rename.h
