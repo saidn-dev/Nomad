@@ -56,6 +56,8 @@ Run the tests in this order. Each stage should pass before moving to the next.
 > ⚠️ **Key technical risk — RF coexistence:** the ESP32-C3 shares radio resources between BLE and Wi-Fi-based ESP-NOW. Espressif documents coexistence behavior and operating-mode constraints, so test the combined setup early rather than assuming that two individually working links will work perfectly together.
 > See: [ESP-IDF — Coexistence](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/coex.html) and [ESP-NOW](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/esp-now.html)
 
+**Prepared for bench time:** [MILESTONE-2-PREP.md](./MILESTONE-2-PREP.md) is the execution runbook for this milestone — the T0–T8 test matrix with metric definitions, the two test-firmware projects in [`firmware/`](./firmware/), verified coexistence facts separated from assumptions, the Monday environment checklist, and PASS / INVESTIGATE / FAIL criteria with a results template. Results belong in [`test-logs/results-template.csv`](./test-logs/results-template.csv). No stage in that document has been run: every row is `NOT RUN` until boards are in hand.
+
 ## 3. What to measure
 
 Record results in a simple spreadsheet or test log.

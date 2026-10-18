@@ -1,0 +1,7 @@
+timestamp,stage,test_id,env_board_a,env_board_b,wifi_channel,ble_conn_interval_ms,distance_m,environment,internet_mode,packets_sent,packets_acked,delivery_pct,ack_mismatches,duplicates_detected,retransmissions,late_acks,rtt_avg_ms,rtt_max_ms,ble_connects,ble_disconnects,ble_mtu,result,operator,notes
+EXAMPLE-DO-NOT-IMPORT,2,T1-bench-1m,espnow_two_way@dev,espnow_two_way@dev,1,n/a,1,indoor-bench,offline,1000,999,99.90,0,2,2,0,6,18,0,0,n/a,PASS,initial,example row only — replace with real Monday data
+,2,,,,,,,,,,,,,,,,,,,,,,NOT RUN,
+,3,,,,,,,,,,,,,,,,,,,,,,NOT RUN,
+,4,,,,,,,,,,,,,,,,,,,,,,NOT RUN,
+,5,,,,,,,,,,,,,,,,,,,,,,NOT RUN,
+,6,,,,,,,,,,,,,,,,,,,,,,NOT RUN,
