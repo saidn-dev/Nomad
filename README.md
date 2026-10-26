@@ -5,6 +5,7 @@
 ![Expo SDK 57](https://img.shields.io/badge/Expo_SDK-57-000020?logo=expo)
 ![Platform: Android](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)
 ![Status: prototype](https://img.shields.io/badge/status-prototype-orange)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 It is a proof of concept for disaster zones, network blackouts, and off-grid areas. The test map covers **Uganda, with Kampala in street-level detail**.
 
@@ -160,8 +161,8 @@ Nomad is a solo prototype. Issues and suggestions are welcome. Read [`PLAN.md`](
 
 ## License
 
-<!-- TODO: choose a project license and add a LICENSE file at the repository root. app/LICENSE is the Expo template's license (650 Industries), not this project's. -->
+<!-- TODO: replace or delete app/LICENSE, which is still the Expo template's license (650 Industries). -->
 
-No license has been chosen yet.
+Nomad is released under the [MIT License](LICENSE).
 
 Third-party components keep their own licenses: MapLibre GL JS (BSD-3-Clause), Noto Sans glyphs (SIL Open Font License 1.1), and map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL).
